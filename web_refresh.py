@@ -21,6 +21,22 @@ def refresh(url, number):
             lock.release()
     print 'finish the url %s' % url
 
+class Task(threading.Thread):
+    def __init__(self, functor, param):
+        super(Task, self).__init__()
+        self.functor = functor
+        self.param = param
+
+    def run(self):
+        try:
+            self.functor(*self.param)
+        except Exception as error:
+            #traceback.print_exc()
+            print error
+
+for param in iter(params):
+    thrd = self.Task(self.desc, self.functor, param)
+    thrd.start()
 
 def main():
 
@@ -40,6 +56,15 @@ def main():
             "http://www.jjl.cn/article/4247.html",
             "http://www.jjl.cn/article/3781.html"
             ]
+
+    params = [
+            ("http://www.jjl.cn/article/16160.html",10000),
+
+    ]
+
+    for param in params:
+        task = Task(refresh, param)
+        task.start()
 
     for url in urls:
         t = threading.Thread(target=refresh,args=(url,10000))
